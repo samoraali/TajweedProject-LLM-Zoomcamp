@@ -1,1 +1,1 @@
-# TajweedProject-LLM-Zoomcamp
+# TajweedAssistant-LLM-Zoomcamp
