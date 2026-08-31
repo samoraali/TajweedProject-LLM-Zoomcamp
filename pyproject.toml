@@ -1,0 +1,21 @@
+[project]
+name = "tajweed-ai-assistant"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = [
+    "arabic-reshaper>=3.0.1",
+    "pillow>=12.3.0",
+    "pymupdf>=1.28.2",
+    "pypdf>=6.16.2",
+    "pytesseract>=0.3.13",
+    "python-bidi>=0.6.11",
+]
+
+[project.scripts]
+tajweed-ai-assistant = "tajweed_ai_assistant:main"
+
+[build-system]
+requires = ["uv_build>=0.12.6,<0.13.0"]
+build-backend = "uv_build"

@@ -216,3 +216,31 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+# Virtual environment
+.venv/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# IDE
+.vscode/
+.idea/
+
+# Environment / secrets
+.env
+.env.*
+!.env.example
+
+# Generated data
+data/intermediate/
+data/processed/
+data/review/
+
+# Local source documents
+data/raw/
+
+# OS
+.DS_Store
+Thumbs.db
