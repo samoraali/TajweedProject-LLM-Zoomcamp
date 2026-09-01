@@ -72,10 +72,12 @@ Vector Search
 Retrieved Context
     │
     ▼
-   LLM
+LLM
     │
     ▼
-RAG Question Answering
+RAG Question Answering 
+
+```
 
 ## Project Structure
 
@@ -96,12 +98,7 @@ tajweed-ai-assistant/
 ├── uv.lock
 └── README.md
 
-
-### 2. Add 'Technology Stack'
-
-Keep it simple for now:
-
-```markdown
+```
 ## Technology Stack
 
 - Python
@@ -146,7 +143,7 @@ Keep it simple for now:
 
 Clone the repository and install the dependencies:
 
-```bash
+``` bash
 git clone https://github.com/samoraali/TajweedProject-LLM-Zoomcamp.git
 cd TajweedProject-LLM-Zoomcamp
 uv sync
