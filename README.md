@@ -78,7 +78,46 @@ LLM
 RAG Question Answering 
 
 ```
+## Data and Reproducibility
 
+The initial knowledge source is:
+
+> ملزمة التجويد 2024
+
+The source PDF is kept locally under `data/raw/` and is not committed to Git because of its file size and source-document considerations.
+
+Generated data under `data/processed/` is also excluded from version control. The processing pipeline can regenerate these files from the source document.
+
+### Knowledge-base pipeline
+
+```text
+Tajweed PDF
+    │
+    ▼
+PDF / OCR extraction
+    │
+    ▼
+ocr_pages.jsonl
+    │
+    ▼
+Conservative Arabic OCR cleaning
+    │
+    ▼
+cleaned_pages.jsonl
+    │
+    ▼
+Paragraph-aware chunking
+    │
+    ▼
+knowledge_base.jsonl
+    │
+    ▼
+Embeddings / Vector Search
+    │
+    ▼
+RAG Question Answering
+
+```
 ## Project Structure
 
 ```text
