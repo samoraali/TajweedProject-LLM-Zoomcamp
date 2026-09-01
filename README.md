@@ -72,7 +72,7 @@ Vector Search
 Retrieved Context
     │
     ▼
-LLM
+   LLM
     │
     ▼
 RAG Question Answering
