@@ -233,10 +233,16 @@ __pycache__/
 .env.*
 !.env.example
 
-# Generated data
+# Generated/intermediate data
 data/intermediate/
-data/processed/
-data/review/
+data/processed/*
+data/review/*
+
+# Keep selected processed/review outputs
+!data/processed/
+!data/processed/knowledge_base.jsonl
+!data/review/
+!data/review/suspicious_ocr.json
 
 # Local source documents
 data/raw/

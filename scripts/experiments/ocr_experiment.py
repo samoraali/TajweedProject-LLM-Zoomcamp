@@ -18,7 +18,7 @@ pytesseract.pytesseract.tesseract_cmd = (
 )
 
 PDF_PATH = Path("data/raw/ملزمة التجويد 2024.pdf")
-OUTPUT_PATH = Path("data/processed/ocr_pages.jsonl")
+OUTPUT_PATH = Path("data/processed/ocr_pages_fresh.jsonl")
 
 START_PAGE = 115
 END_PAGE = 135
