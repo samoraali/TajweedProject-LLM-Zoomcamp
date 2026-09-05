@@ -5,7 +5,7 @@ from tajweed_ai_assistant.retrieval.search import (
     load_knowledge_base,
     search,
 )
-
+from tajweed_ai_assistant.retrieval.rerank import rerank_results
 
 TEST_CASES = [
     # ------------------------------------------------------------------
@@ -192,7 +192,7 @@ def main():
     results_by_query = []
 
     for i, case in enumerate(TEST_CASES, start=1):
-        results = search(
+        baseline_results = search(
             case["query"],
             records,
             embeddings,
@@ -200,29 +200,84 @@ def main():
             top_k=5,
         )
 
-        hit1 = hit_at(results, 1, case["expected_pages"])
-        hit3 = hit_at(results, 3, case["expected_pages"])
-        hit5 = hit_at(results, 5, case["expected_pages"])
+        reranked_results = rerank_results(
+            case["query"],
+            baseline_results,
+            top_k=5,
+        )
 
-        topic1 = topic_hit_at(
-            results,
+        baseline_hit1 = hit_at(
+            baseline_results,
+            1,
+            case["expected_pages"],
+        )
+
+        baseline_hit3 = hit_at(
+            baseline_results,
+            3,
+            case["expected_pages"],
+        )
+
+        baseline_hit5 = hit_at(
+            baseline_results,
+            5,
+            case["expected_pages"],
+        )
+
+        reranked_hit1 = hit_at(
+            reranked_results,
+            1,
+            case["expected_pages"],
+        )
+
+        reranked_hit3 = hit_at(
+            reranked_results,
+            3,
+            case["expected_pages"],
+        )
+
+        reranked_hit5 = hit_at(
+            reranked_results,
+            5,
+            case["expected_pages"],
+        )
+
+        baseline_topic1 = topic_hit_at(
+            baseline_results,
             1,
             case["expected_topic"],
         )
 
-        topic3 = topic_hit_at(
-            results,
+        baseline_topic3 = topic_hit_at(
+            baseline_results,
+            3,
+            case["expected_topic"],
+        )
+
+        reranked_topic1 = topic_hit_at(
+            reranked_results,
+            1,
+            case["expected_topic"],
+        )
+
+        reranked_topic3 = topic_hit_at(
+            reranked_results,
             3,
             case["expected_topic"],
         )
 
         results_by_query.append(
             {
-                "hit1": hit1,
-                "hit3": hit3,
-                "hit5": hit5,
-                "topic1": topic1,
-                "topic3": topic3,
+                "hit1": baseline_hit1,
+                "hit3": baseline_hit3,
+                "hit5": baseline_hit5,
+                "topic1": baseline_topic1,
+                "topic3": baseline_topic3,
+                "reranked_hit1": reranked_hit1,
+                "reranked_hit3": reranked_hit3,
+                "reranked_hit5": reranked_hit5,
+                "reranked_topic1": reranked_topic1,
+                "reranked_topic3": reranked_topic3,
             }
         )
 
@@ -234,19 +289,27 @@ def main():
         )
 
         print(
-            f"   Hit@1={hit1} | "
-            f"Hit@3={hit3} | "
-            f"Hit@5={hit5}"
+            f"   BASELINE  "
+            f"Hit@1={baseline_hit1} | "
+            f"Hit@3={baseline_hit3} | "
+            f"Hit@5={baseline_hit5} | "
+            f"Topic@1={baseline_topic1} | "
+            f"Topic@3={baseline_topic3}"
         )
 
         print(
-            f"   Topic@1={topic1} | "
-            f"Topic@3={topic3}"
+            f"   RERANKED  "
+            f"Hit@1={reranked_hit1} | "
+            f"Hit@3={reranked_hit3} | "
+            f"Hit@5={reranked_hit5} | "
+            f"Topic@1={reranked_topic1} | "
+            f"Topic@3={reranked_topic3}"
         )
 
-        print("   Top results:")
+        print("   Reranked top results:")
 
-        for rank, result in enumerate(results[:3], start=1):
+        
+        for rank, result in enumerate(reranked_results[:3], start=1):
             text_preview = (
                 result["text"]
                 .replace("\n", " ")
@@ -257,8 +320,10 @@ def main():
                 text_preview = text_preview[:120] + "..."
 
             print(
-                f"      #{rank} "
-                f"score={result['score']:.4f} "
+                f"     #{rank} "
+                f"semantic={result['semantic_score']:.4f} "
+                f"lexical={result['lexical_score']:.4f} "
+                f"rerank={result['rerank_score']:.4f} "
                 f"page={result['pdf_page']} "
                 f"topic={result['topic']}"
             )
@@ -287,16 +352,42 @@ def main():
         sum(r["topic3"] for r in results_by_query) / total
     )
 
+    reranked_hit1_score = (
+        sum(r["reranked_hit1"] for r in results_by_query) / total
+    )
+
+    reranked_hit3_score = (
+        sum(r["reranked_hit3"] for r in results_by_query) / total
+    )
+
+    reranked_hit5_score = (
+        sum(r["reranked_hit5"] for r in results_by_query) / total
+    )
+
+    reranked_topic1_score = (
+        sum(r["reranked_topic1"] for r in results_by_query) / total
+    )
+
+    reranked_topic3_score = (
+        sum(r["reranked_topic3"] for r in results_by_query) / total
+    )
     print("\n" + "=" * 80)
     print("SUMMARY")
     print("=" * 80)
 
-    print(f"Test queries: {total}")
+    print("\nBASELINE")
     print(f"Hit@1:        {hit1_score:.1%}")
     print(f"Hit@3:        {hit3_score:.1%}")
     print(f"Hit@5:        {hit5_score:.1%}")
     print(f"Topic@1:      {topic1_score:.1%}")
     print(f"Topic@3:      {topic3_score:.1%}")
+
+    print("\nRERANKED")
+    print(f"Hit@1:        {reranked_hit1_score:.1%}")
+    print(f"Hit@3:        {reranked_hit3_score:.1%}")
+    print(f"Hit@5:        {reranked_hit5_score:.1%}")
+    print(f"Topic@1:      {reranked_topic1_score:.1%}")
+    print(f"Topic@3:      {reranked_topic3_score:.1%}")
 
 
 if __name__ == "__main__":
