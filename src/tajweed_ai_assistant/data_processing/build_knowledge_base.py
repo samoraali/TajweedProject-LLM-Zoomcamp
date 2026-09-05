@@ -102,15 +102,9 @@ def detect_explicit_topic(text: str) -> str | None:
 
     return None
 
-TOPICS = [
-    ...
-]
-
-
 def detect_page_topic(pdf_page: int, text: str) -> str:
     """Infer the main Tajweed topic for a PDF page."""
 
-    # Table of contents / overview page
     if pdf_page == 115:
         return "فهرس / نظرة عامة"
 
@@ -130,7 +124,6 @@ def detect_page_topic(pdf_page: int, text: str) -> str:
         return "الإخفاء الحقيقي"
 
     return detect_topic(text)
-
 
 def detect_topic(text: str) -> str:
     """Assign the most specific Tajweed topic to a chunk."""
